@@ -43,93 +43,47 @@
   - О новых материалах или изменениях в курсе.
 
 
-## Установка
+# Gunicorn and Nginx Setup for Flask App
 
-1. Локально 
-cd path/
-git clone <github link>.git
-cd <directory_project>
+## Installation
 
-Бэкенд
-cd backend
-python3 -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-flask db upgrade
-flask run (based http://127.0.0.1:5000)
+### Gunicorn Service Configuration
+Create a `gunicorn.service` file in `/etc/systemd/system/` with the following content:
 
-Фронтенд
-cd ../frontend
-npm install
-npm run dev (based http://localhost:3000)
-
-2. Сервер 
-
-Войти на сервер ssh root@000.000.000.000, ввести пароль
-mkdir /root/itam
-cd /root/itam
-scp -r /itam/* root@000.000.000.000:/root/itam
-sudo apt install postgresql postgresql-contrib -y
-
-sudo apt update
-sudo apt install python3 python3-pip python3-venv nginx git
-git clone https://github.com/.git
-cd <название_репо>
-
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-flask db upgrade
-pip install gunicorn
-gunicorn wsgi:app -b 127.0.0.1:8000 -w 4
-sudo fuser -k 8000/tcp
-
-cd ../frontend
-npm install
-npm run build
-sudo cp -r build/* /var/www/frontend
-
-sudo nano /etc/nginx/sites-available/team10 ..........
-server {
-    listen 80;
-    server_name team10.itatmisis.ru;
-
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /static/ {
-        alias /root/itam/static/;
-    }
-
-    error_log /var/log/nginx/team10_error.log;
-    access_log /var/log/nginx/team10_access.log;
-}
-sudo ln -s /etc/nginx/sites-available/team10 /etc/nginx/sites-enabled/
-sudo systemctl restart nginx
-sudo nano /etc/systemd/system/gunicorn.service ...........
+```ini
 [Unit]
 Description=Gunicorn instance to serve Flask app
 After=network.target
+
 [Service]
 User=root
 Group=www-data
 WorkingDirectory=/root/itam
 ExecStart=/root/itam/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 wsgi:app
+
 [Install]
 WantedBy=multi-user.target
+```
 
+### Enable and Start Gunicorn
+Run the following commands:
+
+```bash
 sudo systemctl daemon-reload
 sudo systemctl start gunicorn
 sudo systemctl enable gunicorn
+```
 
-check server status - sudo systemctl status gunicorn
-(if like that that is good, example) 
+### Check Server Status
+To check the status of the Gunicorn server, use:
+
+```bash
+sudo systemctl status gunicorn
+```
+
+Example output:
+
+```
 ● gunicorn.service - Gunicorn instance to serve Flask app
      Loaded: loaded (/etc/systemd/system/gunicorn.service; disabled; vendor preset: enabled)
      Active: active (running) since Thu 2024-12-12 09:04:28 MSK; 2h 38min ago
@@ -143,16 +97,36 @@ check server status - sudo systemctl status gunicorn
              ├─106568 /root/itam/venv/bin/python3 /root/itam/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 ws>
              ├─106569 /root/itam/venv/bin/python3 /root/itam/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 ws>
              └─106570 /root/itam/venv/bin/python3 /root/itam/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 ws>
+```
 
-(check nginx on work)
+### Check Nginx Configuration
+To verify that Nginx is working correctly, use:
+
+```bash
 sudo nginx -t
 sudo systemctl restart nginx
-(check logs gunicorn) 
-sudo journalctl -u gunicorn.service -n 50 --no-pager
-(check logs nginx) 
-sudo tail -f /var/log/nginx/error.log
-sudo tail -f /var/log/nginx/access.log
+```
 
+### Check Logs
+
+#### Gunicorn Logs
+View the latest Gunicorn logs:
+
+```bash
+sudo journalctl -u gunicorn.service -n 50 --no-pager
+```
+
+#### Nginx Logs
+View Nginx error logs:
+
+```bash
+sudo tail -f /var/log/nginx/error.log
+```
+
+View Nginx access logs:
+
+```bash
+sudo tail -f /var/log/nginx/access.log
 ## Пример использования 
 URL: /dashboard
 Метод: GET
