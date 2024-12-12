@@ -1,0 +1,1 @@
+export { ColoredCheckbox } from './ColoredCheckbox';
