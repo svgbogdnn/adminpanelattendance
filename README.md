@@ -1,3 +1,56 @@
+# Admin Panel for Attendance Management
+
+## Repository Links
+- Full Project: [Admin Panel Attendance](https://github.com/svgbogdnn/adminpanelattendance)
+- Backend: [Final-Itam-v](https://github.com/svgbogdnn/Final-Itam-v)
+- Business Requirements: [Google Document](https://docs.google.com/document/d/1p4jRWVmtxYdPzHrrp6p5t6t2mQ30udW5dXO5WplEjL4/edit?tab=t.1ne1g710ujzy)
+
+## Project Overview
+This project is an admin panel for managing attendance and course interactions, built using the following technology stack:
+- **Backend**: Flask (Python)
+- **Database**: PostgreSQL
+- **Frontend**: HTML/CSS/JavaScript, with React.js for interactive components.
+
+The goal of the project is to simplify the administration of educational processes by providing functionalities such as course management, attendance tracking, statistical analysis, and student feedback management.
+
+## Architecture
+The architecture follows a client-server model:
+- **Backend**: Provides a REST API for database interaction.
+- **Frontend**: Displays data and handles the user interface.
+
+### Key Features:
+1. **User Management**: Registration, authentication, password recovery.
+2. **Course Management**: Adding, editing, and deleting courses, linking students and teachers.
+3. **Attendance Management**: Marking attendance, filtering by course, date, and status, exporting data.
+4. **Feedback Analysis**: Students can leave feedback and rate lessons, while teachers analyze the feedback.
+5. **Data Export**: Exporting statistics in CSV/Excel formats.
+
+## Backend Highlights
+- Flask processes requests and handles user authorization using **Flask-Login**.
+- Database migrations are managed with **Alembic/Flask-Migrate**.
+
+## Deployment
+The project is deployed on a server configured with **Gunicorn** and **Nginx** for performance and reliability. **GitHub** is used for version control and collaboration.
+
+## Development Workflow
+1. Install dependencies listed in `requirements.txt`.
+2. Set up the database via **pgAdmin 4**.
+3. Perform database migrations.
+4. Link static files and configure server infrastructure.
+
+## Future Plans
+- UI optimization and improvements.
+- Adding advanced analytics modules.
+- Supporting integration with external educational platforms.
+
+---
+
+
+
+
+
+
+
 # Админ Панель Посещаемости
 
 ## 1. Регистрация и Авторизация
